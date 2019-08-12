@@ -13,7 +13,36 @@
     </head>
     
     <body>
+        <header>
+            <h1>Findr</h1>
+            <p class="subheader">Find an event!</p>
+        </header>
+        <main name="main" class="main">
+            <section class="search">
+                <form id="js-form">
+                <label for="event-search"><strong>Search by</strong></label>
+                <select id="search-options">
+                    <option value="0">Artist</option>
+                    <option value="1">Venue</option>
+                    <option value="2">Keyword</option>
+                    <option value="3">Date</option>
+                    <option value="4">Zipcode</option>
+                </select>
+                <input type="text" name="search-word" id="search-word">
+                <input type="number" name="search-num" id="search-num" class="hidden">
+                <input type="checkbox" name="add-weather" id="add-weather"> Include weather<br>
+                <input type="submit" value="Search">
+                </form>
+            </section>
 
+            <section class="results hidden">
+                <h2>Results for <span id="user-choice"></span></h2>
+                <ul id="results-list"></ul>
+                <ul id="results-weather"></ul>
+            </section>
+
+        </main>
+        <script src="index.js"></script>
     </body>
 
 </html>
