@@ -22,15 +22,17 @@
                 <form id="js-form">
                 <label for="event-search"><strong>Search by</strong></label>
                 <select id="search-options">
-                    <option value="0">Artist</option>
-                    <option value="1">Venue</option>
-                    <option value="2">Keyword</option>
-                    <option value="3">Date</option>
-                    <option value="4">Zipcode</option>
+                    <option value="0">City</option>
+                    <option value="1">State</option>
+                    <option value="2">Zip code</option>
+                    <option value="3">Keyword</option>
                 </select>
-                <input type="text" name="search-word" id="search-word">
-                <input type="number" name="search-num" id="search-num" class="hidden">
-                <input type="checkbox" name="add-weather" id="add-weather"> Include weather<br>
+                <input type="text" name="search-word" id="search-word" placeholder="Adele">
+                <div>
+                    <label for="max-results">Maximum results to return</label>
+                    <input type="number" name="max-results" id="max-results" value="10">
+                </div>
+                <input type="checkbox" name="add-weather" id="add-weather">Include weather<br>
                 <input type="submit" value="Search">
                 </form>
             </section>
@@ -42,6 +44,7 @@
             </section>
 
         </main>
+        <script type="text/javascript" src="states.js"></script>
         <script src="index.js"></script>
     </body>
 

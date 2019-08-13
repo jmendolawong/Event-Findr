@@ -13,7 +13,7 @@ body {
 }
 */
 
-label {
+label[for='event-search'] {
     margin-bottom: 10px;
     font-size: 25px;
 }
