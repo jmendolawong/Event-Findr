@@ -3,7 +3,7 @@
 const tm_api = 'eAd63TkQc0q3l9HRSC8sAeztaCS3XKUg'
 const tm_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
 const w_api = 'b4d04345bca045fe9ed144628181312'
-const w_url = 'http://api.apixu.com/v1'
+const w_url = 'http://api.apixu.com/v1/'
 
 
 
@@ -19,18 +19,72 @@ function formatParams(param){
     return queryString.join("&");
 }
 
+//Takes the parameters latitude, longitude and date
+//Formats into appropriate weather api string
+//If date is today, then current weather
+//if date is later and less than 11 days away, then forecast
+//if date is >10 days away, then return message 
+
+function formatWeatherParam(lat, long, date){
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    let yyyy = today.getFullYear();
+    today = yyyy+'-'+mm+'-'+dd;
+    
+    console.log(today);
+    console.log(date);
+    if(today == date){
+        return `${w_url}current.json?key=${w_api}&q=${lat},${long}`;
+    }
+}
 
 
+function getWeather(url){
+    fetch(url)
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } throw new Error(response.statusText);
+    }).then(responseJSON => {
+        //console.log(responseJSON);
+        $('#results-weather').append(
+            `<li>${responseJSON.current.condition.text}
+            Temp: ${responseJSON.current.temp_f}&#8457
+            </li>`
+        )    
+    })
+    .catch(error =>{
+        console.log(`Error: ${error.message}`);
+    })
+}
+
+/*
+This function emptys out the #results-list if refreshed through multiple queries
+Appends results to #results-list.
+Pulls the latitude and longitude and plugs them into the weather API
+*/
 function displayResults(results){
     $('#results-list').empty();
+    $('#results-weather').empty();
 
-    $('#user-choice').text(query);
-    console.log(results._embedded.events[0].name);
+    let bitly, lat, long, date, url= '';
+
     for(let i=0; i<results.page.size; i++){
-        let bitly = results._embedded.events[i];
+        bitly = results._embedded.events[i];
+        date = bitly.dates.start.localDate;
+
+        if($('#add-weather').prop('checked')){
+            lat = bitly._embedded.venues[0].location.latitude;
+            long = bitly._embedded.venues[0].location.longitude;
+            getWeather(formatWeatherParam(lat, long, date));
+        }
+
+
         $('#results-list').append(
-            `<li><h2>${bitly.name}</h2>
-            <p>${bitly.dates.start.localDate}</p>
+            `<li>
+            <p><strong>${bitly.name}<strong>: <a href='${bitly.url}'>Buy tickets</a></p>
+            <p>${date}</p>
             
             `
         )
@@ -76,7 +130,7 @@ function getEvent(word, size=10){
     const queryString = formatParams(params);
 
     //adds all components together for api digestible url
-    const url = tm_url+"?"+queryString;
+    const url = tm_url+"?"+queryString+"&sort=date,asc";
 
     console.log(url);
     fetch(url)
@@ -86,7 +140,7 @@ function getEvent(word, size=10){
             }
             throw new Error (response.statusText);
         })
-        .then(responseJSON => {console.log(responseJSON);displayResults(responseJSON);})
+        .then(responseJSON => {console.log(responseJSON); displayResults(responseJSON);})
         .catch(error => console.log('Error: '+error.message))
 }
 
