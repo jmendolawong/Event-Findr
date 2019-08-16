@@ -6,12 +6,9 @@ body {
     text-align: center;
 }
 
-/*
-#js-form {
-    display: flex;
-    justify-content: center;
+ul {
+    display: inline-block;
 }
-*/
 
 label[for='event-search'] {
     margin-bottom: 10px;

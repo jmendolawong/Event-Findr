@@ -19,46 +19,59 @@ function formatParams(param){
     return queryString.join("&");
 }
 
-//Takes the parameters latitude, longitude and date
-//Formats into appropriate weather api string
+//Takes the parameters latitude, longitude
+//Stuffs it into appropriate weather api string
+function formatWeatherParam(lat, long){
+    return `${w_url}key=${w_api}&q=${lat},${long}`;
+}
+
+
 //If date is today, then current weather
 //if date is later and less than 11 days away, then forecast
 //if date is >10 days away, then return message 
-
-function formatWeatherParam(lat, long, date){
+function getWeather(url, date){
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0'); 
     let yyyy = today.getFullYear();
     today = yyyy+'-'+mm+'-'+dd;
-    
     console.log(today);
     console.log(date);
+
+    //Is date today?
     if(today == date){
-        
-        let temp = `${w_url}key=${w_api}&q=${lat},${long}`;
-        console.log(temp);
-        return temp;
-    }
-}
+        fetch(url)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } throw new Error(response.statusText);
+        }).then(responseJSON => {
+            $('#results-weather').append(
+                `<li>${responseJSON.current.condition.text},
+                Temp: ${responseJSON.current.temp_f}&#8457
+                </li>`
+            )    
+        })
+        .catch(error =>{
+            console.log(`Error: ${error.message}`);
+        })
+    } else {
 
-
-function getWeather(url){
     fetch(url)
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        } throw new Error(response.statusText);
-    }).then(responseJSON => {
-        $('#results-weather').append(
-            `<li>${responseJSON.current.condition.text},
-            Temp: ${responseJSON.current.temp_f}&#8457
-            </li>`
-        )    
-    })
-    .catch(error =>{
-        console.log(`Error: ${error.message}`);
-    })
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } throw new Error(response.statusText);
+        }).then(responseJSON => {
+            $('#results-weather').append(
+                `<li>No weather to report
+                </li>`
+            )    
+        })
+        .catch(error =>{
+            console.log(`Error: ${error.message}`);
+        })
+    }
 }
 
 /*
@@ -79,7 +92,7 @@ function displayResults(results){
         if($('#add-weather').prop('checked')){
             lat = bitly._embedded.venues[0].location.latitude;
             long = bitly._embedded.venues[0].location.longitude;
-            getWeather(formatWeatherParam(lat, long, date));
+            getWeather(formatWeatherParam(lat, long), date);
         }
 
 
