@@ -47,9 +47,8 @@ function getWeather(url){
             return response.json();
         } throw new Error(response.statusText);
     }).then(responseJSON => {
-        //console.log(responseJSON);
         $('#results-weather').append(
-            `<li>${responseJSON.current.condition.text}
+            `<li>${responseJSON.current.condition.text},
             Temp: ${responseJSON.current.temp_f}&#8457
             </li>`
         )    
