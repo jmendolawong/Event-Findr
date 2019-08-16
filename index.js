@@ -35,13 +35,15 @@ function formatWeatherParam(lat, long, date){
     console.log(today);
     console.log(date);
     if(today == date){
-        return `${w_url}current.json?key=${w_api}&q=${lat},${long}`;
+        
+        let temp = `${w_url}current.json?key=${w_api}&q=${lat},${long}`;
+        console.log(temp);
+        return temp;
     }
 }
 
 
 function getWeather(url){
-    console.log(url);
     fetch(url)
     .then(response => {
         if(response.ok){
