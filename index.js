@@ -3,7 +3,7 @@
 const tm_api = 'eAd63TkQc0q3l9HRSC8sAeztaCS3XKUg'
 const tm_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
 const w_api = 'b4d04345bca045fe9ed144628181312'
-const w_url = 'https://api.apixu.com/v1/'
+const w_url = 'https://api.apixu.com/v1/current.json?'
 
 
 
@@ -36,7 +36,7 @@ function formatWeatherParam(lat, long, date){
     console.log(date);
     if(today == date){
         
-        let temp = `${w_url}current.json?key=${w_api}&q=${lat},${long}`;
+        let temp = `${w_url}key=${w_api}&q=${lat},${long}`;
         console.log(temp);
         return temp;
     }
