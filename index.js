@@ -56,7 +56,12 @@ function getWeather(url, date){
             console.log(`Error: ${error.message}`);
         })
     } else {
-
+        $('#results-weather').append(
+            `<li>No weather to report
+            </li>`
+        )    
+    
+    /* Take out this logic until a more robust forecast solution
     fetch(url)
         .then(response => {
             if(response.ok){
@@ -71,6 +76,7 @@ function getWeather(url, date){
         .catch(error =>{
             console.log(`Error: ${error.message}`);
         })
+    */
     }
 }
 
