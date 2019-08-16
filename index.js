@@ -3,7 +3,7 @@
 const tm_api = 'eAd63TkQc0q3l9HRSC8sAeztaCS3XKUg'
 const tm_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
 const w_api = 'b4d04345bca045fe9ed144628181312'
-const w_url = 'http://api.apixu.com/v1/'
+const w_url = 'https://api.apixu.com/v1/'
 
 
 
