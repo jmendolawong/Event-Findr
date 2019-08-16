@@ -41,6 +41,7 @@ function formatWeatherParam(lat, long, date){
 
 
 function getWeather(url){
+    console.log(url);
     fetch(url)
     .then(response => {
         if(response.ok){
