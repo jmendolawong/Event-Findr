@@ -35,8 +35,8 @@ function getWeather(url, date){
     let mm = String(today.getMonth() + 1).padStart(2, '0'); 
     let yyyy = today.getFullYear();
     today = yyyy+'-'+mm+'-'+dd;
-    console.log(today);
-    console.log(date);
+    //console.log(today);
+    //console.log(date);
 
     //Is date today?
     if(today == date){
@@ -56,13 +56,10 @@ function getWeather(url, date){
             console.log(`Error: ${error.message}`);
         })
     } else {
-        console.log('TEST TEST TEST');
         $('#results-weather').append(
             `<li>No weather to report
             </li>`
         )
-        console.log('TEST1 TEST1 TEST1');
-
     
     /* Take out this logic until a more robust forecast solution
     fetch(url)
@@ -84,11 +81,15 @@ function getWeather(url, date){
 }
 
 /*
-This function emptys out the #results-list if refreshed through multiple queries
+This function empties out the #results-list if refreshed through multiple queries
 Appends results to #results-list.
 Pulls the latitude and longitude and plugs them into the weather API
 */
 function displayResults(results){
+    if(!$('.error').hasClass('hidden')){
+        $('.error').addClass('hidden');
+    }
+
     $('#results-list').empty();
     $('#results-weather').empty();
 
@@ -104,19 +105,15 @@ function displayResults(results){
             getWeather(formatWeatherParam(lat, long), date);
         }
 
-
         $('#results-list').append(
             `<li>
             <p><strong>${bitly.name}<strong>: <a href='${bitly.url}'>Buy tickets</a></p>
             <p>${date}</p>
-            
             `
         )
     }
 
     $('.results').removeClass('hidden');
-   
-
 }
 
 
@@ -137,6 +134,7 @@ function getEvent(word, size=10){
 
     //Pulls text from user selected key
     let queryKey = $('#search-options option:selected').text().toLowerCase();
+    let queryKeyError = queryKey;
     //Accounts for variations of States input
     if(queryKey == 'state'){
         queryKey += 'Code';
@@ -165,7 +163,15 @@ function getEvent(word, size=10){
             throw new Error (response.statusText);
         })
         .then(responseJSON => {console.log(responseJSON); displayResults(responseJSON);})
-        .catch(error => console.log('Error: '+error.message))
+        .catch(error => {
+            $('.error').removeClass('hidden');
+            $('#errorMessage').text(`Error: Unable to find any events`);// related to ${word}`);
+            if(!$('.results').hasClass('hidden')){
+                $('.results').addClass('hidden');
+            }
+        
+            console.log('Error*: '+error.message)
+        })
 }
 
 
@@ -179,7 +185,6 @@ function watchForm() {
         e.preventDefault();
         const query = $('#search-word').val();
         const limit = $('#max-results').val();
-        //const queryNum = $('#search-num').val();
         getEvent(query, limit);
     });
 }

@@ -8,6 +8,7 @@ body {
 
 ul {
     display: inline-block;
+    list-style-type: none;
 }
 
 label[for='event-search'] {
@@ -31,4 +32,14 @@ input[type="submit"] {
 
 .hidden {
     display: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.item {
+    flex-grow: 1;
 }

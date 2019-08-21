@@ -36,11 +36,15 @@
                 <input type="submit" value="Search">
                 </form>
             </section>
-
+            <section class="error hidden">
+                <h2 id='errorMessage'></h2>
+            </section>
             <section class="results hidden">
                 <h2>Results</h2>
-                <ul id="results-list"></ul>
-                <ul id="results-weather"></ul>
+                <div class='container'>
+                    <ul class='item' id="results-list"></ul>
+                    <ul class='item' id="results-weather"></ul>
+                </div>
             </section>
 
         </main>
