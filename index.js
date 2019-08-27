@@ -84,6 +84,7 @@ function displayResults(results) {
             `<li>
             <p><strong>${bitly.name}<strong>: <a href='${bitly.url}'>Buy tickets</a></p>
             <p>${date}</p>
+            <p> ---------------------- </p>
             `
         )
     }
