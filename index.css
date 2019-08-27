@@ -7,7 +7,6 @@ body, html {
     font-family: 'Karla', sans-serif;
     font-size: 17px;
     color: white;
-    /*background-image: url('./images/concert-head.jpg');*/
     height: 100%;
     margin: 0;
 }
@@ -123,13 +122,14 @@ input[type="submit"]:hover {
 ul {
     display: inline-block;
     list-style-type: none;
-    padding: 15px;
+    padding: 0 15px 15px;    
     margin: 0;
 }
 
 .results-container > h2 {
     font-size: 40px;
     margin-bottom: 10px;
+    font-family: 'Fira Sans', sans-serif;
 }
 
 .weather {
@@ -137,7 +137,9 @@ ul {
 }
 
 .weather > h2 {
+    margin-top: 5px;
     margin-bottom: 15px;
+    font-family: 'Fira Sans', sans-serif;
 }
 
 #forecast {

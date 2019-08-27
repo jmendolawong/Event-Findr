@@ -18,7 +18,7 @@ function formatWeatherParam(lat, long) {
 //if date is later and less than 11 days away, then forecast
 //if date is >10 days away, then return message 
 //tolocaledate
-function getWeather(url) {
+function getWeather(url, today) {
     console.log(url);
     if ($('.weather').hasClass('hidden')) {
         $('.weather').removeClass('hidden');
@@ -31,6 +31,7 @@ function getWeather(url) {
             throw new Error(response.statusCode);
         })
         .then(responseJSON => {
+            $('#date').html(today);
             $('#forecast').html(responseJSON.current.condition.text);
             $('#icon').attr('src', responseJSON.current.condition.icon);
             $('#temperature').html(`Temp: ${responseJSON.current.temp_f}&#8457`);
@@ -48,8 +49,8 @@ Appends results to #results-list.
 Pulls the latitude and longitude and plugs them into the weather API
 */
 function displayResults(results) {
-    if (!$('.error').hasClass('hidden')) {
-        $('.error').addClass('hidden');
+    if (!$('.error').hasClass('hide')) {
+        $('.error').addClass('hide');
     }
 
     $('#results-list').empty();
@@ -59,6 +60,7 @@ function displayResults(results) {
         dd = today.getDate(),
         mm = ('0' + (today.getMonth() + 1)).slice(-2),
         yyyy = today.getFullYear();
+    let weatherDate = mm+'/'+dd;
     today = yyyy + '-' + mm + '-' + dd;
 
 
@@ -71,7 +73,7 @@ function displayResults(results) {
             if (date == today || bitly.dates.end != undefined) {
                 let lat = bitly._embedded.venues[0].location.latitude;
                 let long = bitly._embedded.venues[0].location.longitude;
-                getWeather(formatWeatherParam(lat, long));
+                getWeather(formatWeatherParam(lat, long), weatherDate);
             } else $('.weather').addClass('hidden');
         }
         if (bitly.dates.end != undefined) {

@@ -10,7 +10,7 @@
     <!--stylesheet + jquery-->
     <link rel="stylesheet" href="index.css">
 
-    <link href="https://fonts.googleapis.com/css?family=Karla|Lexend+Tera&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Karla|Lexend+Tera|Fira+Sans&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
@@ -52,7 +52,7 @@
             </div>
     </div>
     <div class='results-page hide'>
-        <section class="error hidden">
+        <section class="error hide">
             <h2 id='errorMessage'></h2>
         </section>
         <section class="results hidden">
@@ -64,7 +64,7 @@
                     <ul class='item' id="results-list"></ul>
                 </div>
                 <div class='weather hidden flex-item flex-sides'>
-                    <h2>Going out tonight? <br>Here's the weather!</h2>
+                    <h2>Going out tonight? <br>Weather for <span id="date"></span></h2>
                     <p id="forecast"></p>
                     <p id="temperature"></p>
                 </div>
