@@ -22,11 +22,10 @@
     <div class='bg'>
 
         <header>
-            <h1>Event Findr</h1>
-            <h3 class="subheader">Looking for an event in your area?</h3>
-        </header>
-        <main name="main" class="main">
-
+            <div class="head">
+                <h1>Event Findr</h1>
+                <h3 class="subheader">Looking for an event in your area?</h3>
+            </div>
             <div class='search'>
                 <section class="search">
                     <form id="js-form">
@@ -42,7 +41,7 @@
                             required>
                         <div class='input-max'>
                             <label for="max-results">Maximum results</label>
-                            <input type="number" name="max-results" id="max-results" value="5">
+                            <input type="number" name="max-results" id="max-results" value="10">
                         </div>
                         <a name=".results-page">
                             <input type="submit" value="Search">
@@ -50,27 +49,32 @@
                     </form>
                 </section>
             </div>
+        </header>
     </div>
-    <div class='results-page hide'>
-        <section class="error hide">
-            <h2 id='errorMessage'></h2>
-        </section>
-        <section class="results hidden">
-            <div class='flex-container'>
-                <div class='flex-item flex-sides'>
+    <main name="main" class="main">
+
+        <div class='results-page hide'>
+            <section class="error hide">
+                <h2 id='errorMessage'></h2>
+            </section>
+            <section class="results hidden">
+                <div class='flex-container'>
+                    <div class='flex-item flex-sides'>
+                    </div>
+                    <div class='results-container flex-item'>
+                        <h2>Event Happenings</h2>
+                        <ul class='item' id="results-list"></ul>
+                    </div>
+                    <div class='weather hidden flex-item flex-sides'>
+                        <h2>Going out tonight? <br>Weather for <span id="date"></span></h2>
+                        <p id="forecast"></p>
+                        <p id="temperature"></p>
+                    </div>
                 </div>
-                <div class='results-container flex-item'>
-                    <h2>Event Happenings</h2>
-                    <ul class='item' id="results-list"></ul>
-                </div>
-                <div class='weather hidden flex-item flex-sides'>
-                    <h2>Going out tonight? <br>Weather for <span id="date"></span></h2>
-                    <p id="forecast"></p>
-                    <p id="temperature"></p>
-                </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
+
+        <footer></footer>
 
     </main>
     <script type="text/javascript" src="states.js"></script>
