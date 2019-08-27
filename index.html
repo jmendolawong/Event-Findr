@@ -1,55 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!--metadata + title-->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>API Hack Capstone</title>
-        
-        <!--stylesheet + jquery-->
-        <link rel="stylesheet" href="index.css">
-        <script src="https://code.jquery.com/jquery-3.3.1.js" 
-        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    </head>
-    
-    <body>
+
+<head>
+    <!--metadata + title-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Findr</title>
+
+    <!--stylesheet + jquery-->
+    <link rel="stylesheet" href="index.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Karla|Lexend+Tera&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous">
+        </script>
+
+</head>
+
+<body>
+    <div class='bg'>
+
         <header>
-            <h1>Findr</h1>
-            <p class="subheader">Find an event!</p>
+            <h1>Event Findr</h1>
+            <h3 class="subheader">Looking for an event in your area?</h3>
         </header>
         <main name="main" class="main">
-            <section class="search">
-                <form id="js-form">
-                <label for="event-search"><strong>Search by</strong></label>
-                <select id="search-options">
-                    <option value="0">City</option>
-                    <option value="1">State</option>
-                    <option value="2">Zip code</option>
-                    <option value="3">Keyword</option>
-                </select>
-                <input type="text" name="search-word" id="search-word" placeholder="Adele">
-                <div>
-                    <label for="max-results">Maximum results to return</label>
-                    <input type="number" name="max-results" id="max-results" value="10">
-                </div>
-                <input type="checkbox" name="add-weather" id="add-weather">Include weather<br>
-                <input type="submit" value="Search">
-                </form>
-            </section>
-            <section class="error hidden">
-                <h2 id='errorMessage'></h2>
-            </section>
-            <section class="results hidden">
-                <h2>Results</h2>
-                <div class='container'>
-                    <ul class='item' id="results-list"></ul>
-                    <ul class='item' id="results-weather"></ul>
-                </div>
-            </section>
 
-        </main>
-        <script type="text/javascript" src="states.js"></script>
-        <script src="index.js"></script>
-    </body>
+            <div class='search'>
+                <section class="search">
+                    <form id="js-form">
+                        <label for="search-options">Search by</label>
+                        <select id="search-options">
+                            <option value="0">City</option>
+                            <option value="1">Zip code</option>
+                            <!--<option value="2">State</option>
+                    <option value="3">Keyword</option>-->
+                        </select>
+                        <label for="search-word"></label>
+                        <input type="text" name="search-word" id="search-word" placeholder="e.g. Atlanta or 30339"
+                            required>
+                        <div class='input-max'>
+                            <label for="max-results">Maximum results</label>
+                            <input type="number" name="max-results" id="max-results" value="5">
+                        </div>
+                        <a name=".results-page">
+                            <input type="submit" value="Search">
+                        </a>
+                    </form>
+                </section>
+            </div>
+    </div>
+    <div class='results-page hide'>
+        <section class="error hidden">
+            <h2 id='errorMessage'></h2>
+        </section>
+        <section class="results hidden">
+            <div class='flex-container'>
+                <div class='flex-item flex-sides'>
+                </div>
+                <div class='results-container flex-item'>
+                    <h2>Event Happenings</h2>
+                    <ul class='item' id="results-list"></ul>
+                </div>
+                <div class='weather hidden flex-item flex-sides'>
+                    <h2>Going out tonight? <br>Here's the weather!</h2>
+                    <p id="forecast"></p>
+                    <p id="temperature"></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    </main>
+    <script type="text/javascript" src="states.js"></script>
+    <script src="index.js"></script>
+</body>
 
 </html>

@@ -1,108 +1,81 @@
 'use strict'
 
-const tm_api = 'eAd63TkQc0q3l9HRSC8sAeztaCS3XKUg'
-const tm_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
-const w_api = 'b4d04345bca045fe9ed144628181312'
-const w_url = 'https://api.apixu.com/v1/current.json?'
+const ticketMasterApi = 'eAd63TkQc0q3l9HRSC8sAeztaCS3XKUg'
+const ticketMasterUrl = 'https://app.ticketmaster.com/discovery/v2/events.json'
+const weatherApi = 'b4d04345bca045fe9ed144628181312'
+const weatherUrl = 'https://api.apixu.com/v1/current.json?'
 
-
-
-/*
-Take object parameters and format into a url digestible string for queries
-Iterate over using keys to create an array, combine into another array with the correct format
-Join array into one string
-*/
-function formatParams(param){
-
-    const queryString = Object.keys(param)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(param[key])}`);
-    return queryString.join("&");
-}
 
 //Takes the parameters latitude, longitude
 //Stuffs it into appropriate weather api string
-function formatWeatherParam(lat, long){
-    return `${w_url}key=${w_api}&q=${lat},${long}`;
+function formatWeatherParam(lat, long) {
+    return `${weatherUrl}key=${weatherApi}&q=${lat},${long}`;
 }
+
 
 
 //If date is today, then current weather
 //if date is later and less than 11 days away, then forecast
 //if date is >10 days away, then return message 
-function getWeather(url, date){
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    let yyyy = today.getFullYear();
-    today = yyyy+'-'+mm+'-'+dd;
-    //console.log(today);
-    //console.log(date);
-
-    //Is date today?
-    if(today == date){
-        fetch(url)
-        .then(response => {
-            if(response.ok){
-                return response.json();
-            } throw new Error(response.statusText);
-        }).then(responseJSON => {
-            $('#results-weather').append(
-                `<li>${responseJSON.current.condition.text},
-                Temp: ${responseJSON.current.temp_f}&#8457
-                </li>`
-            )    
-        })
-        .catch(error =>{
-            console.log(`Error: ${error.message}`);
-        })
-    } else {
-        $('#results-weather').append(
-            `<li>No weather to report
-            </li>`
-        )
-    
-    /* Take out this logic until a more robust forecast solution
+//tolocaledate
+function getWeather(url) {
+    console.log(url);
+    if ($('.weather').hasClass('hidden')) {
+        $('.weather').removeClass('hidden');
+    }
     fetch(url)
         .then(response => {
-            if(response.ok){
+            if (response.ok) {
                 return response.json();
-            } throw new Error(response.statusText);
-        }).then(responseJSON => {
-            $('#results-weather').append(
-                `<li>No weather to report
-                </li>`
-            )    
+            }
+            throw new Error(response.statusCode);
         })
-        .catch(error =>{
-            console.log(`Error: ${error.message}`);
+        .then(responseJSON => {
+            $('#forecast').html(responseJSON.current.condition.text);
+            $('#icon').attr('src', responseJSON.current.condition.icon);
+            $('#temperature').html(`Temp: ${responseJSON.current.temp_f}&#8457`);
         })
-    */
-    }
+        .catch(error => {
+            console.log(`Weather Error: ${error.message}`);
+        })
 }
+
+
 
 /*
 This function empties out the #results-list if refreshed through multiple queries
 Appends results to #results-list.
 Pulls the latitude and longitude and plugs them into the weather API
 */
-function displayResults(results){
-    if(!$('.error').hasClass('hidden')){
+function displayResults(results) {
+    if (!$('.error').hasClass('hidden')) {
         $('.error').addClass('hidden');
     }
 
     $('#results-list').empty();
     $('#results-weather').empty();
 
-    let bitly, lat, long, date, url= '';
+    let today = new Date(),
+        dd = today.getDate(),
+        mm = ('0' + (today.getMonth() + 1)).slice(-2),
+        yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
 
-    for(let i=0; i<results.page.size; i++){
-        bitly = results._embedded.events[i];
-        date = bitly.dates.start.localDate;
 
-        if($('#add-weather').prop('checked')){
-            lat = bitly._embedded.venues[0].location.latitude;
-            long = bitly._embedded.venues[0].location.longitude;
-            getWeather(formatWeatherParam(lat, long), date);
+    for (let i = 0; i < results.page.size; i++) {
+        let bitly = results._embedded.events[i];
+        let date = bitly.dates.start.localDate;
+
+        //Is date == today?
+        if (i == 0) {
+            if (date == today || bitly.dates.end != undefined) {
+                let lat = bitly._embedded.venues[0].location.latitude;
+                let long = bitly._embedded.venues[0].location.longitude;
+                getWeather(formatWeatherParam(lat, long));
+            } else $('.weather').addClass('hidden');
+        }
+        if (bitly.dates.end != undefined) {
+            date = date + ' through ' + bitly.dates.end.localDate;
         }
 
         $('#results-list').append(
@@ -112,73 +85,58 @@ function displayResults(results){
             `
         )
     }
-
     $('.results').removeClass('hidden');
 }
 
 
 /*
 User inputs search parameters
-Format those params into digestible ticketmaster api compability.
+Format those params into digestible ticketmaster api url.
 Pull out useful information from the json response, clean it up and html it
-Then possibly search for weather during that event
-
 Filter by: keyword, city, stateCode, postalCode
 */
-function getEvent(word, size=10){
+function getEvent(word, size = 10) {
     //argument is the value inputted by user
     const params = {
-        apikey: tm_api,
+        apikey: ticketMasterApi,
         size
     };
 
     //Pulls text from user selected key
     let queryKey = $('#search-options option:selected').text().toLowerCase();
-    let queryKeyError = queryKey;
-    //Accounts for variations of States input
-    if(queryKey == 'state'){
-        queryKey += 'Code';
-        if(word.length > 2){
-            word = Object.keys(states).find(key => states[key].toLowerCase() == word.toLowerCase());
-        }
-    } else if (queryKey == 'zip code'){
+    //let queryKeyError = queryKey;
+
+    if (queryKey == 'zip code') {
         queryKey = 'postalCode';
     }
-
-    //adds additional query parameter to object
     params[queryKey] = word;
 
-    //formats into a url digestible string
-    const queryString = formatParams(params);
-
     //adds all components together for api digestible url
-    const url = tm_url+"?"+queryString+"&sort=date,asc";
+    const url = ticketMasterUrl + "?" + $.param(params) + "&sort=date,asc";
 
     console.log(url);
     fetch(url)
         .then(response => {
-            if(response.ok){
+            if (response.ok) {
                 return response.json();
             }
-            throw new Error (response.statusText);
+            throw new Error(response.statusText);
         })
-        .then(responseJSON => {console.log(responseJSON); displayResults(responseJSON);})
+        .then(responseJSON => { console.log(responseJSON); displayResults(responseJSON); })
         .catch(error => {
             $('.error').removeClass('hidden');
-            $('#errorMessage').text(`Error: Unable to find any events`);// related to ${word}`);
-            if(!$('.results').hasClass('hidden')){
+            $('#errorMessage').text(`Error: Unable to find any events. Please search a different area`);
+            if (!$('.results').hasClass('hidden')) {
                 $('.results').addClass('hidden');
             }
-        
-            console.log('Error*: '+error.message)
+            console.log('Events Error: ' + error.message)
         })
 }
 
-
 /*
--preventDefault
--listen for form submission
--change input to text or number and possible placeholders based on select value
+PreventDefault
+Listen for form submission
+Plug inputs into select variables and pass those into getEvent function
 */
 function watchForm() {
     $('form').submit(e => {
@@ -186,6 +144,8 @@ function watchForm() {
         const query = $('#search-word').val();
         const limit = $('#max-results').val();
         getEvent(query, limit);
+        $('.results-page').removeClass('hide');
+        $('html, body').animate({ scrollTop: $('.results-page').offset().top})
     });
 }
 
