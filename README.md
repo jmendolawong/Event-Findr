@@ -1,7 +1,7 @@
 # Event Findr
 
 ## Demo
-[Live Demo](https://jmw7.github.io/API-Hack-Capstone/)
+[Live Demo](https://jmw7.github.io/Event-Findr/)
 
 ## Screenshot
 ![Cover photo of webpage](https://github.com/jmw7/API-Hack-Capstone/blob/master/images/Cover.PNG)
