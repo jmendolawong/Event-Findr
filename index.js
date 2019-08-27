@@ -6,23 +6,25 @@ const weatherApi = 'b4d04345bca045fe9ed144628181312'
 const weatherUrl = 'https://api.apixu.com/v1/current.json?'
 
 
-//Takes the parameters latitude, longitude
-//Stuffs it into appropriate weather api string
+/*
+Takes the parameters latitude, longitude
+Stuffs it into appropriate weather api string
+*/
 function formatWeatherParam(lat, long) {
     return `${weatherUrl}key=${weatherApi}&q=${lat},${long}`;
 }
 
-
-
-//If date is today, then current weather
-//if date is later and less than 11 days away, then forecast
-//if date is >10 days away, then return message 
-//tolocaledate
+/*
+Removes hidden class from weather if still attached
+Gets weather using lat and long and puts it into HTML
+*/
 function getWeather(url, today) {
+
     console.log(url);
     if ($('.weather').hasClass('hidden')) {
         $('.weather').removeClass('hidden');
     }
+
     fetch(url)
         .then(response => {
             if (response.ok) {
@@ -44,9 +46,12 @@ function getWeather(url, today) {
 
 
 /*
-This function empties out the #results-list if refreshed through multiple queries
-Appends results to #results-list.
-Pulls the latitude and longitude and plugs them into the weather API
+Rehides error message if last query didn't return any results
+Empties out the #results-list if refreshed through multiple queries
+If the date of one of the event == today
+Pulls the latitude and longitude and plugs them into the weather function
+Pulls event name, ticket url and date(s) of event 
+Appends those results to #results-list
 */
 function displayResults(results) {
     if (!$('.error').hasClass('hide')) {
@@ -54,13 +59,12 @@ function displayResults(results) {
     }
 
     $('#results-list').empty();
-    $('#results-weather').empty();
 
     let today = new Date(),
         dd = today.getDate(),
         mm = ('0' + (today.getMonth() + 1)).slice(-2),
         yyyy = today.getFullYear();
-    let weatherDate = mm+'/'+dd;
+    let weatherDate = mm + '/' + dd;
     today = yyyy + '-' + mm + '-' + dd;
 
 
@@ -76,6 +80,7 @@ function displayResults(results) {
                 getWeather(formatWeatherParam(lat, long), weatherDate);
             } else $('.weather').addClass('hidden');
         }
+
         if (bitly.dates.end != undefined) {
             date = date + ' through ' + bitly.dates.end.localDate;
         }
@@ -96,25 +101,21 @@ function displayResults(results) {
 User inputs search parameters
 Format those params into digestible ticketmaster api url.
 Pull out useful information from the json response, clean it up and html it
-Filter by: keyword, city, stateCode, postalCode
+Filter by: city or postalCode, display x results
 */
 function getEvent(word, size = 10) {
-    //argument is the value inputted by user
     const params = {
         apikey: ticketMasterApi,
         size
     };
 
-    //Pulls text from user selected key
     let queryKey = $('#search-options option:selected').text().toLowerCase();
-    //let queryKeyError = queryKey;
-
     if (queryKey == 'zip code') {
         queryKey = 'postalCode';
     }
+
     params[queryKey] = word;
 
-    //adds all components together for api digestible url
     const url = ticketMasterUrl + "?" + $.param(params) + "&sort=date,asc";
 
     console.log(url);
@@ -140,6 +141,7 @@ function getEvent(word, size = 10) {
 PreventDefault
 Listen for form submission
 Plug inputs into select variables and pass those into getEvent function
+Removes 'hide' class to the results page so the animation can scroll down
 */
 function watchForm() {
     $('form').submit(e => {
@@ -148,7 +150,7 @@ function watchForm() {
         const limit = $('#max-results').val();
         getEvent(query, limit);
         $('.results-page').removeClass('hide');
-        $('html, body').animate({ scrollTop: $('.results-page').offset().top})
+        $('html, body').animate({ scrollTop: $('.results-page').offset().top })
     });
 }
 
