@@ -7,7 +7,7 @@
 ![Cover photo of webpage](https://github.com/jmw7/API-Hack-Capstone/blob/master/images/Cover.PNG)
 
 ## Summary
-Event Findr enables a simple user interface integrated to the TicketMaster API. A user can search by specific city or zip code and specificy the number of results to return. Results will render asynchronously with the date of the event and a link to buy tickets. If any of the returned results fall on the day that the user is searching for, weather will pop up for the area determined by the user. This is generated from the apixu weather API. If no events fall on the same day as the search, no weather will appear.
+Event Findr is a simple user interface integrated with the TicketMaster and APIXU Weather API. A user can search by specific city or zip code and specify the number of results to return. Results will render asynchronously with the date of the event and a link to buy tickets. If any of the returned results fall on the same day as the search (i.e. current day), the weather will pop up for the area as inputted by the user. This is generated from the APIXU weather API. If no events fall on the same day as the search, no weather will appear. If no events can be found or incorrect cities or zip codes are input, an error message will prompt the user to search another area. 
 
 ## Key Technologies
   * HTML
