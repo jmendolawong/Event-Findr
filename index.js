@@ -62,9 +62,16 @@ function displayResults(results) {
 
     let today = new Date(),
         dd = today.getDate(),
-        mm = ('0' + (today.getMonth() + 1)).slice(-2),
+        mm = (today.getMonth() + 1),
         yyyy = today.getFullYear();
     let weatherDate = mm + '/' + dd;
+    if(dd < 10) {
+        dd = '0' + dd;
+    }
+    if(mm < 10) {
+        mm = '0' + mm;
+    }
+
     today = yyyy + '-' + mm + '-' + dd;
 
 
@@ -74,6 +81,8 @@ function displayResults(results) {
 
         //Is date == today?
         if (i == 0) {
+            console.log(date);
+            console.log(today);
             if (date == today || bitly.dates.end != undefined) {
                 let lat = bitly._embedded.venues[0].location.latitude;
                 let long = bitly._embedded.venues[0].location.longitude;
